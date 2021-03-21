@@ -1,8 +1,0 @@
-{
-  "modules" : { 
-    "vdm"  : {
-      "description": "Ecoutez une bonne vie de merde !",
-      "version"    : "1.0"
-    }
-  }
-}
