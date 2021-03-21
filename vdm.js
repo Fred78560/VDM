@@ -1,44 +1,15 @@
-exports.action = function(data, callback, config, SARAH){
-	var url = null;
-	var txt = "L'action a échoué";
+exports.action = function(data){
 
-  switch(data.command){ 
-	case 'random':
-		url = 'http://www.viedemerde.fr/aleatoire';
-		break;
-	default:
-		break;
-  }
-  
+  url = 'http://www.viedemerde.fr/aleatoire';
+
   if(url){
 	var request = require('request');
 	request({ 'uri' : url }, function (err, response, body){    
-		if (err || response.statusCode != 200) {
-		  callback({'tts': txt});
-		  console.log('ERRR');
-		  return;
-		}
 		var $ = require('cheerio').load(body, { xmlMode: true, ignoreWhitespace: false, lowerCaseTags: false });
-		txt  = getRandomVdm($);
+		txt  = $('div.article-contents').first().find('a.article-link').text();  // On remplace le proverbe pour la lecture
 		console.log(txt);
-		callback({'tts': txt});
+		JarvisIASpeech(txt);
 		return;
 	});
-  } else {
-	callback({'tts': txt});
-	}
-}
-
-
-  // ------------------------------------------
-  //  SCRAPING
-  // ------------------------------------------
-
-var getRandomVdm = function($){
-  var vdm = '';
-  $('#content DIV.article').first().find('P A.fmllink').each(function(i, elem){
-	vdm += $(this).text();
-  });
-  // On remplace le VDM pour la lecture
-  return vdm.replace(/vdm/gi, ", vie de merde.");
+  } 
 }
